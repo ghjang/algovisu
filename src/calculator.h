@@ -1,0 +1,8 @@
+#ifndef ALGOVISU_CACULATOR_H
+#define ALGOVISU_CACULATOR_H
+
+
+
+
+
+#endif  // ALGOVISU_CACULATOR_H
