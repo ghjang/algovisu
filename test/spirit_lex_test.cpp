@@ -262,3 +262,73 @@ TEST_CASE("Spirit.Lex getting token info with explicit token id", "[lexer]")
     REQUIRE((std::get<0>(tokenStore[5]) == ID_RPAREN));
     REQUIRE((std::get<1>(tokenStore[5]) == ")"));
 }
+
+//==============================================================================
+namespace
+{
+    template <typename Lexer>
+    struct op_token_with_white_space_state : lex::lexer<Lexer>
+    {
+        op_token_with_white_space_state()
+        {
+            this->self = lex::char_('+')
+                            | '-'
+                            | '*'
+                            | '/'
+                            | '('
+                            | ')';
+
+            white_space_ = "[ \\t\\n]+";
+            this->self("WS") = white_space_;    // NOTE: this is for the Spirit.Qi.
+        }
+
+        lex::token_def<> white_space_;
+    };
+}   // un-named namespace
+
+TEST_CASE("Spirit.Lex getting default token info with white-space-state", "[lexer]")
+{
+    // NOTE: this string has 5 white space tokens.
+    char const * pBegin = R"(+   -   * /
+                                ()
+                            )";
+    char const * pEnd = pBegin + std::strlen(pBegin);
+
+    using lexer_t = lex::lexertl::lexer<>;
+    using token_store_t = std::vector<std::pair<int, std::string>>;
+
+    op_token_with_white_space_state<lexer_t> tokens;
+    token_store_t tokenStore;
+
+    REQUIRE_FALSE(
+        lex::tokenize(
+                pBegin, pEnd,
+                tokens,
+                [&tokenStore](auto const& token) {
+                    static_assert(
+                        std::is_same<
+                                lex::lexertl::token<>,
+                                std::decay_t<decltype(token)>
+                        >()
+                    );
+
+                    static_assert(
+                        std::is_same<
+                                boost::iterator_range<char const *>,
+                                std::decay_t<decltype(token.value())>
+                        >()
+                    );
+                    
+                    tokenStore.emplace_back(
+                        token.id(),
+                        std::string{ std::begin(token.value()), std::end(token.value()) }
+                    );
+                    
+                    return true;
+                }
+        )
+    );
+
+    REQUIRE(tokenStore.size() == 1);
+    REQUIRE(std::strstr(pBegin, "   -   * /") == pBegin);
+}
