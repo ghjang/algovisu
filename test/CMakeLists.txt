@@ -16,10 +16,14 @@ else()
     message(FATAL_ERROR "Could not find boost!")
 endif()
 
+set(ALGOVISU_ROOT "../src")
+include_directories(${ALGOVISU_ROOT})
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 
 set(SOURCE_FILES
         spirit_lex_test.cpp
+        calculator_test.cpp
         main.cpp)
 
 add_executable(algovisu_test ${SOURCE_FILES})
