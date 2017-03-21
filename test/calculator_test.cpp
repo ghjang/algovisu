@@ -107,4 +107,35 @@ TEST_CASE("calc token", "[algovisu]")
 
     REQUIRE((std::get<0>(tokenStore[1]) == 65536));
     REQUIRE((std::get<1>(tokenStore[1]) == "123456789"));
+
+    //==========================================================================
+    pBegin = "10+(20-5)*7/2";
+    pEnd = pBegin + std::strlen(pBegin);
+    tokenStore = tokenize(pBegin, pEnd, calc_token<lexer_t>{});    
+
+    REQUIRE(!tokenStore.empty());
+    REQUIRE(tokenStore.size() == 11);
+
+    REQUIRE((std::get<0>(tokenStore[0]) == 65536));
+    REQUIRE((std::get<1>(tokenStore[0]) == "10"));
+    REQUIRE((std::get<0>(tokenStore[1]) == '+'));
+    REQUIRE((std::get<1>(tokenStore[1]) == "+"));
+    REQUIRE((std::get<0>(tokenStore[2]) == '('));
+    REQUIRE((std::get<1>(tokenStore[2]) == "("));
+    REQUIRE((std::get<0>(tokenStore[3]) == 65536));
+    REQUIRE((std::get<1>(tokenStore[3]) == "20"));
+    REQUIRE((std::get<0>(tokenStore[4]) == '-'));
+    REQUIRE((std::get<1>(tokenStore[4]) == "-"));
+    REQUIRE((std::get<0>(tokenStore[5]) == 65536));
+    REQUIRE((std::get<1>(tokenStore[5]) == "5"));
+    REQUIRE((std::get<0>(tokenStore[6]) == ')'));
+    REQUIRE((std::get<1>(tokenStore[6]) == ")"));
+    REQUIRE((std::get<0>(tokenStore[7]) == '*'));
+    REQUIRE((std::get<1>(tokenStore[7]) == "*"));
+    REQUIRE((std::get<0>(tokenStore[8]) == 65536));
+    REQUIRE((std::get<1>(tokenStore[8]) == "7"));
+    REQUIRE((std::get<0>(tokenStore[9]) == '/'));
+    REQUIRE((std::get<1>(tokenStore[9]) == "/"));
+    REQUIRE((std::get<0>(tokenStore[10]) == 65536));
+    REQUIRE((std::get<1>(tokenStore[10]) == "2"));
 }
