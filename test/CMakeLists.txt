@@ -23,6 +23,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 
 set(SOURCE_FILES
         spirit_lex_test.cpp
+        spirit_qi_test.cpp
         calculator_test.cpp
         main.cpp)
 
