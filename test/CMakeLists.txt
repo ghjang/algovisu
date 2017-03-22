@@ -19,7 +19,7 @@ endif()
 set(ALGOVISU_ROOT "../src")
 include_directories(${ALGOVISU_ROOT})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -ftemplate-backtrace-limit=0")
 
 set(SOURCE_FILES
         spirit_lex_test.cpp
