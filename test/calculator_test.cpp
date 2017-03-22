@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "calculator.h"
+#include "debug_utility.h"
 
 
 namespace
@@ -138,4 +139,29 @@ TEST_CASE("calc token", "[algovisu]")
     REQUIRE((std::get<1>(tokenStore[9]) == "/"));
     REQUIRE((std::get<0>(tokenStore[10]) == 65536));
     REQUIRE((std::get<1>(tokenStore[10]) == "2"));
+}
+
+TEST_CASE("calc grammar", "[algovisu]")
+{
+    using namespace algovisu;
+
+    char const * pBegin = "10 * (20 + 5) - 10 / 2";
+    char const * pEnd = pBegin + std::strlen(pBegin);
+
+    using lexer_impl_t = lex::lexertl::lexer<>;
+    using lexer_def_t = calc_token<lexer_impl_t>;
+
+    lexer_def_t tokens;
+    calc_grammar<lexer_def_t> calc{ tokens };
+
+    auto tokenBegin = tokens.begin(pBegin, pEnd);
+    auto tokenEnd = tokens.end();
+
+    REQUIRE(
+        tools::test_phrase_parser(
+            tokenBegin, tokenEnd,
+            calc,
+            qi::in_state("WS")[tokens.self]
+        )
+    );
 }
